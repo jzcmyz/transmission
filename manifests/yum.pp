@@ -17,15 +17,4 @@ class transmission::yum {
     provider => 'rpm',
     source   => "/tmp/rpmforge-release-0.5.2-2.el${::operatingsystemmajrelease}.rf.${::architecture}.rpm",
   }
-  # Manage EPEL - REMOVED
-  #staging::file { "epel":
-  #  source => "http://dl.fedoraproject.org/pub/epel/${::operatingsystemmajrelease}/${::architecture}/epel-release-6-8.noarch.rpm",
-  #  target => '/tmp/epel-release-6-8.noarch.rpm',
-  #  before => Package['epel'],
-  #}
-  #package { 'epel':
-  #  ensure   => installed,
-  #  provider => 'rpm',
-  #  source   => '/tmp/epel-release-6-8.noarch.rpm',
-  #}
 }
