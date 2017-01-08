@@ -1,5 +1,6 @@
 class transmission (
   $transd                         = $transmission::params::transd,
+  $transd_config                  = $transmission::params::transd_config,
   $transuser                      = $transmission::params::transuser,
   $transgroup                     = $transmission::params::transgroup,
   $alt_speed_down                 = $transmission::params::alt_speed_down,
@@ -83,34 +84,38 @@ class transmission (
   group { $transgroup:
     ensure => present,
   }
-#  class { 'transmission::yum': } ->
+
   package { [ 'transmission','transmission-cli','transmission-common','transmission-daemon','transmission-gtk' ]:
     ensure  => installed,
-#    require => Yumrepo['geekery'],
     before  => File[trans-config-shell],
   }
+
   file { 'trans-config-shell':
     ensure  => file,
-    path    => "${transd}/settingz.json",
+    path    => "${transd_config}/settingz.json",
     mode    => '0600',
     content => template("${module_name}/settings.json.erb"),
   }
+
   exec { 'stop daemon to update file':
     path      => $::path,
-    cwd       => $transd,
-    command   => "puppet resource service transmission-daemon ensure=stopped && /bin/cp -af ${transd}/settingz.json ${transd}/settings.json",
+    cwd       => $transd_config,
+    command   => "puppet resource service transmission-daemon ensure=stopped && /bin/cp -af ${transd_config}/settingz.json ${transd_config}/settings.json",
     unless    => 'diff -q settingz.json settings.json',
     subscribe => File['trans-config-shell'],
   }
+
   service { 'transmission-daemon':
     ensure    => running,
     subscribe => Exec['stop daemon to update file'],
   }
+
   if $download_dir == $incomplete_dir {
     $dirs = $download_dir
   } else {
     $dirs = [ $download_dir, $incomplete_dir ]
   }
+
   file { $dirs:
     require => Package['transmission-daemon'],
   }

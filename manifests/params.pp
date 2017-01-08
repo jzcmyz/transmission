@@ -1,5 +1,6 @@
 class transmission::params {
   $transd                         = '/var/lib/transmission'
+  $transd_config                  = "$transd/.config/transmission-daemon"
   $transuser                      = 'transmission'
   $transgroup                     = 'transmission'
   $alt_speed_down                 = 25
