@@ -83,10 +83,10 @@ class transmission (
   group { $transgroup:
     ensure => present,
   }
-  class { 'transmission::yum': } ->
+#  class { 'transmission::yum': } ->
   package { [ 'transmission','transmission-cli','transmission-common','transmission-daemon','transmission-gtk' ]:
     ensure  => installed,
-    require => Yumrepo['geekery'],
+#    require => Yumrepo['geekery'],
     before  => File[trans-config-shell],
   }
   file { 'trans-config-shell':
