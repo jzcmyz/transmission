@@ -1,0 +1,9 @@
+---
+transmission::utp_enabled: true
+
+# ntp/data/os/AIX.yaml
+---
+ntp::service_name: xntpd
+
+# ntp/data/os/RedHat.yaml
+ntp::service_name: ntp
