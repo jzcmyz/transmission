@@ -107,6 +107,7 @@ class transmission (
 
   service { 'transmission-daemon':
     ensure    => running,
+    enable    => true,
     subscribe => Exec['stop daemon to update file'],
   }
 
