@@ -87,30 +87,22 @@ class transmission (
 
   package { [ 'transmission','transmission-cli','transmission-common','transmission-daemon','transmission-gtk' ]:
     ensure  => installed,
-    before  => File[trans-config-shell],
+    before  => File['settings.json'],
   }
 
-  file { 'trans-config-shell':
-    ensure  => file,
-#    path    => "${transd_config}/settingz.json",
+  file { 'settings.json':
+    ensure  => present,
     path    => "${transd_config}/settings.json",
     mode    => '0600',
     content => template("${module_name}/settings.json.erb"),
-    notify => Service['transmission-daemon'],
-  }
-
-#  exec { 'stop daemon to update file':
-#    path      => $::path,
-#    cwd       => $transd_config,
-#    command   => "puppet resource service transmission-daemon ensure=stopped && /bin/cp -af ${transd_config}/settingz.json ${transd_config}/settings.json",
-#    unless    => 'diff -q settingz.json settings.json',
-#    subscribe => File['trans-config-shell'],
-#  }
+  }~>
+    service { 'transmission-daemon reload':
+      restart     => '/usr/bin/pkill -HUP transmission-da',
+    }
 
   service { 'transmission-daemon':
     ensure    => running,
     enable    => true,
-#    subscribe => Exec['stop daemon to update file'],
   }
 
   if $download_dir == $incomplete_dir {
