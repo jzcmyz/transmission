@@ -2,7 +2,7 @@
 transmission::gavin: 'This is from the data in module hiera common.yaml'
 
 transmission::transd: '/var/lib/transmission'
-transmission::transd_config: "%{transd}/.config/transmission-daemon"
+transmission::transd_config: '/var/lib/transmission/.config/transmission-daemon'
 transmission::transuser: 'transmission'
 transmission::transgroup: 'transmission'
 transmission::alt_speed_down: 25
