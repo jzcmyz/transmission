@@ -57,7 +57,7 @@ transmission::rpc_whitelist: '*'
 transmission::rpc_whitelist_enabled: false
 transmission::scrape_paused_torrents_enabled: true
 transmission::script_torrent_done_enabled: false
-transmission::script_torrent_done_filename: 
+transmission::script_torrent_done_filename: ''
 transmission::seed_queue_enabled: false
 transmission::seed_queue_size: 10
 transmission::speed_limit_down: 100
