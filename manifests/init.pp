@@ -103,7 +103,7 @@ Boolean $utp_enabled,
   exec { 'stop daemon to update file':
     path      => $::path,
     cwd       => $transd_config,
-    command   => "puppet resource service transmission-daemon ensure=stopped && /bin/cp -af ${transd_config}/setting.json.new ${transd_config}/settings.json",
+    command   => "puppet resource service transmission-daemon ensure=stopped && /bin/cp -af ${transd_config}/settings.json.new ${transd_config}/settings.json",
     unless    => 'diff -q setting.json.new settings.json',
     subscribe => File['settings.json'],
   }
