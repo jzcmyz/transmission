@@ -89,23 +89,29 @@ Boolean $utp_enabled,
   }
 
   package { [ 'transmission','transmission-cli','transmission-common','transmission-daemon','transmission-gtk' ]:
-    ensure  => installed,
-    before  => File['settings.json'],
+    ensure => installed,
+    before => File['settings.json'],
   }
 
   file { 'settings.json':
     ensure  => present,
-    path    => "${transd_config}/settings.json",
+    path    => "${transd_config}/settings.json.new",
     mode    => '0600',
     content => template("${module_name}/settings.json.erb"),
-  }~>
-    service { 'transmission-daemon reload':
-      restart     => '/usr/bin/pkill -HUP transmission-da',
-    }
+  }
+
+  exec { 'stop daemon to update file':
+    path      => $::path,
+    cwd       => $transd_config,
+    command   => "puppet resource service transmission-daemon ensure=stopped && /bin/cp -af ${transd_config}/setting.json.new ${transd_config}/settings.json",
+    unless    => 'diff -q setting.json.new settings.json',
+    subscribe => File['settings.json'],
+  }
 
   service { 'transmission-daemon':
-    ensure    => running,
-    enable    => true,
+    ensure => running,
+    enable => true,
+    subscribe => Exec['stop daemon to update file'],
   }
 
   if $download_dir == $incomplete_dir {
